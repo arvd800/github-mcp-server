@@ -48,8 +48,12 @@ func stdioCmd() *cobra.Command {
 			if token == "" {
 				token = os.Getenv("GH_TOKEN")
 			}
+			// Also check GITHUB_TOKEN, commonly set in CI/CD environments (e.g. GitHub Actions)
 			if token == "" {
-				return fmt.Errorf("GitHub token is required: set GITHUB_PERSONAL_ACCESS_TOKEN or GH_TOKEN, or use --token flag")
+				token = os.Getenv("GITHUB_TOKEN")
+			}
+			if token == "" {
+				return fmt.Errorf("GitHub token is required: set GITHUB_PERSONAL_ACCESS_TOKEN, GH_TOKEN, or GITHUB_TOKEN, or use --token flag")
 			}
 
 			return runStdioServer(cmd.Context(), token, logFile)
