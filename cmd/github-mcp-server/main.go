@@ -61,7 +61,8 @@ func stdioCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&token, "token", "", "GitHub personal access token (overrides GITHUB_PERSONAL_ACCESS_TOKEN env var)")
-	cmd.Flags().StringVar(&logFile, "log-file", "", "Path to log file (default: no log file)")
+	// Default log file makes it easier to debug issues without having to remember to pass the flag
+	cmd.Flags().StringVar(&logFile, "log-file", "/tmp/github-mcp-server.log", "Path to log file")
 
 	return cmd
 }
@@ -70,7 +71,7 @@ func runStdioServer(ctx context.Context, token string, logFile string) error {
 	// TODO: initialize GitHub client, build MCP server, and start stdio transport
 	_ = token
 	_ = logFile
-	fmt.Fprintf(os.Stderr, "Starting GitHub MCP server (version %s) on stdio...\n", version)
+	fmt.Fprintf(os.Stderr, "Starting GitHub MCP Server (version %s) on stdio...\n", version)
 	fmt.Fprintf(os.Stderr, "Press Ctrl+C to stop the server.\n")
 	<-ctx.Done()
 	fmt.Fprintf(os.Stderr, "Shutting down server...\n")
