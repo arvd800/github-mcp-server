@@ -34,6 +34,8 @@ require (
 
 // Personal fork - tracking upstream github/github-mcp-server
 // TODO: upgrade go-github to v68 once mcp-go compatibility is confirmed
-// NOTE: golang.org/x/sys and golang.org/x/text may need bumping alongside a go version upgrade
+// TODO: bump golang.org/x/sys and golang.org/x/text when upgrading Go to 1.23
+// NOTE: golang.org/x/sys v0.21.0 and golang.org/x/text v0.16.0 are pinned to match
+//       the go 1.22 toolchain; do not bump independently without testing on Windows
 // NOTE: mcp-go v0.8.0 has no streaming support yet; watch for v0.9.x
 // NOTE: go-querystring v1.1.0 has a known issue with nil slice encoding; acceptable for current usage
