@@ -12,6 +12,9 @@ import (
 
 // NewServer creates a new MCP server with GitHub tools registered.
 // It accepts a personal access token for authenticating with the GitHub API.
+//
+// Note: token should have appropriate scopes for the tools you intend to use.
+// For read-only usage, a token with just `repo:read` is sufficient.
 func NewServer(token string, opts ...server.ServerOption) (*server.MCPServer, error) {
 	// Create authenticated GitHub client
 	ctx := context.Background()
