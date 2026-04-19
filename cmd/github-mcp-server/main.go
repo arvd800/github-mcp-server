@@ -49,7 +49,7 @@ func stdioCmd() *cobra.Command {
 				token = os.Getenv("GH_TOKEN")
 			}
 			if token == "" {
-				return fmt.Errorf("GitHub token is required: set GITHUB_PERSONAL_ACCESS_TOKEN or use --token flag")
+				return fmt.Errorf("GitHub token is required: set GITHUB_PERSONAL_ACCESS_TOKEN or GH_TOKEN, or use --token flag")
 			}
 
 			return runStdioServer(cmd.Context(), token, logFile)
@@ -57,7 +57,8 @@ func stdioCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&token, "token", "", "GitHub personal access token (overrides GITHUB_PERSONAL_ACCESS_TOKEN env var)")
-	cmd.Flags().StringVar(&logFile, "log-file", "", "Path to log file (defaults to stderr)")
+	// Default log file to /tmp/github-mcp-server.log for easier local debugging
+	cmd.Flags().StringVar(&logFile, "log-file", "/tmp/github-mcp-server.log", "Path to log file")
 
 	return cmd
 }
