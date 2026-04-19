@@ -71,7 +71,7 @@ func runStdioServer(ctx context.Context, token string, logFile string) error {
 	// TODO: initialize GitHub client, build MCP server, and start stdio transport
 	_ = token
 	_ = logFile
-	fmt.Fprintln(os.Stderr, "Starting GitHub MCP server on stdio...")
+	fmt.Fprintf(os.Stderr, "Starting GitHub MCP server (version %s) on stdio...\n", version)
 	<-ctx.Done()
 	return nil
 }
