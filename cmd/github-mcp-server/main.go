@@ -44,6 +44,10 @@ func stdioCmd() *cobra.Command {
 			if token == "" {
 				token = os.Getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
 			}
+			// Also check the shorter GH_TOKEN env var as a fallback (used by gh CLI)
+			if token == "" {
+				token = os.Getenv("GH_TOKEN")
+			}
 			if token == "" {
 				return fmt.Errorf("GitHub token is required: set GITHUB_PERSONAL_ACCESS_TOKEN or use --token flag")
 			}
