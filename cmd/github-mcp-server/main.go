@@ -57,8 +57,8 @@ func stdioCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&token, "token", "", "GitHub personal access token (overrides GITHUB_PERSONAL_ACCESS_TOKEN env var)")
-	// Default log file to /tmp/github-mcp-server.log for easier local debugging
-	cmd.Flags().StringVar(&logFile, "log-file", "/tmp/github-mcp-server.log", "Path to log file")
+	// Changed default log file to empty string to avoid writing logs unless explicitly requested
+	cmd.Flags().StringVar(&logFile, "log-file", "", "Path to log file (default: no log file)")
 
 	return cmd
 }
