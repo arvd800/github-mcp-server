@@ -34,3 +34,4 @@ require (
 
 // Personal fork - tracking upstream github/github-mcp-server
 // TODO: upgrade go-github to v68 once mcp-go compatibility is confirmed
+// NOTE: golang.org/x/sys and golang.org/x/text may need bumping alongside a go version upgrade
