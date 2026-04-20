@@ -61,8 +61,12 @@ func stdioCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&token, "token", "", "GitHub personal access token (overrides GITHUB_PERSONAL_ACCESS_TOKEN env var)")
-	// Changed default log file to a user-specific path to avoid permission issues on shared machines
-	cmd.Flags().StringVar(&logFile, "log-file", os.Getenv("HOME")+"/.github-mcp-server.log", "Path to log file")
+	// Use a subdirectory under XDG_STATE_HOME or HOME for cleaner log organization
+	defaultLogDir := os.Getenv("XDG_STATE_HOME")
+	if defaultLogDir == "" {
+		defaultLogDir = os.Getenv("HOME") + "/.local/state"
+	}
+	cmd.Flags().StringVar(&logFile, "log-file", defaultLogDir+"/github-mcp-server/server.log", "Path to log file")
 
 	return cmd
 }
