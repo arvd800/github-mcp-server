@@ -81,6 +81,7 @@ func registerIssueTools(s *server.MCPServer, client *github.Client, t translatio
 				mcp.Description(t("TOOL_LIST_ISSUES_REPO_DESC", "Repository name")),
 			),
 			mcp.WithString("state",
+				// Default is "open" per GitHub API; explicitly noting "all" is useful for searching closed issues
 				mcp.Description(t("TOOL_LIST_ISSUES_STATE_DESC", "Issue state: open, closed, or all (default: open)")),
 			),
 		),
@@ -100,7 +101,11 @@ func listIssuesHandler(client *github.Client) server.ToolHandlerFunc {
 			return mcp.NewToolResultError(err.Error()), nil
 		}
 
-		state := req.GetString("state", "open")
+		// Default state to "open" if not provided
+		state := "open"
+		if s, ok := req.Params.Arguments["state"].(string); ok && s != "" {
+			state = s
+		}
 
 		issues, resp, err := client.Issues.ListByRepo(ctx, owner, repo, &github.IssueListByRepoOptions{
 			State: state,
