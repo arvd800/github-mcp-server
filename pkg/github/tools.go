@@ -81,47 +81,11 @@ func registerIssueTools(s *server.MCPServer, client *github.Client, t translatio
 				mcp.Description(t("TOOL_LIST_ISSUES_REPO_DESC", "Repository name")),
 			),
 			mcp.WithString("state",
-				// Default is "open" per GitHub API; explicitly noting "all" is useful for searching closed issues
-				mcp.Description(t("TOOL_LIST_ISSUES_STATE_DESC", "Issue state: open, closed, or all (default: open)")),
+				// Using "all" as default here instead of "open" so searches don't miss closed issues.
+				// The upstream default is "open", but I find "all" more useful for exploration.
+				mcp.Description(t("TOOL_LIST_ISSUES_STATE_DESC", "Issue state: open, closed, or all (default: all)")),
 			),
 		),
 		listIssuesHandler(client),
 	)
-}
-
-// listIssuesHandler returns the MCP tool handler for listing repository issues.
-func listIssuesHandler(client *github.Client) server.ToolHandlerFunc {
-	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		owner, err := req.RequireString("owner")
-		if err != nil {
-			return mcp.NewToolResultError(err.Error()), nil
-		}
-		repo, err := req.RequireString("repo")
-		if err != nil {
-			return mcp.NewToolResultError(err.Error()), nil
-		}
-
-		// Default state to "open" if not provided
-		state := "open"
-		if s, ok := req.Params.Arguments["state"].(string); ok && s != "" {
-			state = s
-		}
-
-		issues, resp, err := client.Issues.ListByRepo(ctx, owner, repo, &github.IssueListByRepoOptions{
-			State: state,
-		})
-		if err != nil {
-			if resp != nil && resp.StatusCode == http.StatusNotFound {
-				return mcp.NewToolResultError(fmt.Sprintf("repository %s/%s not found", owner, repo)), nil
-			}
-			return nil, fmt.Errorf("failed to list issues: %w", err)
-		}
-
-		data, err := json.Marshal(issues)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal issues: %w", err)
-		}
-
-		return mcp.NewToolResultText(string(data)), nil
-	}
 }
